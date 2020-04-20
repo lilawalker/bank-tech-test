@@ -17,11 +17,14 @@
 require 'simplecov'
 require 'simplecov-console'
 
+SimpleCov.start do
+  add_filter '/spec/'
+end
+
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
   SimpleCov::Formatter::Console,
   SimpleCov::Formatter::HTMLFormatter
 ])
-SimpleCov.start
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
