@@ -22,4 +22,25 @@ describe 'User Stories' do
     end
   end
 
+  describe 'withdraw' do
+    # As a user
+    # So that I can take out money for spending
+    # I would like to withdraw money from my account
+
+    context 'sufficient balance' do
+      it 'can withdraw money from the account' do
+        account.deposit(50)
+        expect { account.withdraw(50) }.not_to raise_error
+      end
+    end
+
+    context 'insufficient balance' do
+      it 'throws an eror if there is not enough money in the account' do
+        account.deposit(50)
+        account.withdraw(50)
+        expect { account.withdraw(50) }.to raise_error 'Insufficient balance. Please try again.'
+      end
+    end
+  end
+  
 end

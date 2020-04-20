@@ -10,4 +10,16 @@ class Account
     @balance += amount
   end
 
+  def withdraw(amount)
+    fail 'Insufficient balance. Please try again.' unless sufficient_funds?(amount)
+
+    @balance -= amount
+  end
+
+  private
+
+  def sufficient_funds?(amount)
+    @balance >= amount
+  end
+  
 end
