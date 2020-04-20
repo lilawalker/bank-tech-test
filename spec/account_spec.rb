@@ -9,8 +9,8 @@ describe Account do
       expect(account).to respond_to(:deposit).with(1).argument
     end
 
-    it 'returns the deposited value' do
-      expect(account.deposit(1000.00)).to eq 1000.00
+    it 'adds the deposited amount to the balance' do
+      expect { account.deposit(1000.00) }.to change { account.balance }.by(1000.00)
     end
   end
 
