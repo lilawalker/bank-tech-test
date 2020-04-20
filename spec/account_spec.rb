@@ -14,4 +14,10 @@ describe Account do
     end
   end
 
+  describe '.balance' do
+    it 'has an initial balance of 0' do
+      expect(account.balance).to eq 0
+    end
+  end
+
 end

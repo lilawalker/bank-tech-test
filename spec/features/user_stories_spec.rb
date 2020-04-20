@@ -1,6 +1,6 @@
 describe 'User Stories' do
 
-let(:account) { Account.new }
+  let(:account) { Account.new }
 
   describe 'deposit' do
     # As a user
@@ -9,6 +9,16 @@ let(:account) { Account.new }
 
     it 'so money can be deposited into the account' do
       expect { account.deposit(1000.00) }.not_to raise_error
+    end
+  end
+
+  describe 'balance' do
+    # As a user
+    # So that I know how much money is in my account
+    # I would like to see the balance on my account
+
+    it 'allows the balance to be displayed' do
+      expect { account.balance }.not_to raise_error
     end
   end
 
