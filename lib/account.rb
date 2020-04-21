@@ -12,15 +12,15 @@ class Account
   end
 
   def deposit(amount)
-    @balance += amount
     @transactions << Transaction.new(amount, 'credit')
+    @balance += amount
   end
 
   def withdraw(amount)
     fail 'Insufficient balance. Please try again.' unless sufficient_funds?(amount)
 
-    @balance -= amount
     @transactions << Transaction.new(amount, 'debit')
+    @balance -= amount
   end
 
   private
