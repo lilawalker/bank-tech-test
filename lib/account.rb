@@ -1,3 +1,5 @@
+require_relative 'transaction'
+
 class Account
 
   INITIAL_BALANCE = 0
@@ -11,14 +13,14 @@ class Account
 
   def deposit(amount)
     @balance += amount
-    @transactions << { time: Time.now, amount: amount, type: 'credit' }
+    @transactions << Transaction.new(amount, 'credit')
   end
 
   def withdraw(amount)
     fail 'Insufficient balance. Please try again.' unless sufficient_funds?(amount)
 
     @balance -= amount
-    @transactions << { time: Time.now, amount: amount, type: 'debit' }
+    @transactions << Transaction.new(amount, 'debit')
   end
 
   private

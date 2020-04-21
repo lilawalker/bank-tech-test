@@ -3,11 +3,8 @@ require './lib/account'
 describe Account do
 
   subject(:account) { described_class.new }
-
-  before do
-    @time_now = Time.parse('21/04/2020')
-    allow(Time).to receive(:now).and_return(@time_now)
-  end
+  let(:credit_transaction) { double :credit_transaction }
+  let(:debit_transaction) { double :debit_transaction }
 
   describe '.balance' do
     it 'has an initial balance of 0' do
@@ -25,8 +22,9 @@ describe Account do
     end
 
     it 'adds the details of the deposited amount to the list of transactions' do
+      allow(Transaction).to receive(:new).with(1000.00, 'credit').and_return(credit_transaction)
       account.deposit(1000.00)
-      expect(account.transactions).to include({ time: Time.now, amount: 1000.00, type: 'credit' })
+      expect(account.transactions).to include(credit_transaction)
     end
   end
 
@@ -45,9 +43,11 @@ describe Account do
     end
 
     it 'adds the details of the withdrawn amount to the list of transactions' do
+      allow(Transaction).to receive(:new).with(1000.00, 'credit').and_return(credit_transaction)
       account.deposit(1000.00)
+      allow(Transaction).to receive(:new).with(1000.00, 'debit').and_return(debit_transaction)
       account.withdraw(1000.00)
-      expect(account.transactions).to include({ time: Time.now, amount: 1000.00, type: 'debit' })
+      expect(account.transactions).to include(debit_transaction)
     end
   end
 
