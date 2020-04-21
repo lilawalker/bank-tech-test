@@ -6,7 +6,7 @@ describe Account do
 
   describe '.balance' do
     it 'has an initial balance of 0' do
-      expect(account.balance).to eq 0
+      expect(account.balance).to eq Account::INITIAL_BALANCE
     end
   end
 
@@ -34,5 +34,5 @@ describe Account do
       expect { account.withdraw(50) }.to raise_error 'Insufficient balance. Please try again.'
     end
   end
-  
+
 end
