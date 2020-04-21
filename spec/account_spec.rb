@@ -4,6 +4,11 @@ describe Account do
 
   subject(:account) { described_class.new }
 
+  before do
+    @time_now = Time.parse('21/04/2020')
+    allow(Time).to receive(:now).and_return(@time_now)
+  end
+
   describe '.balance' do
     it 'has an initial balance of 0' do
       expect(account.balance).to eq Account::INITIAL_BALANCE
@@ -17,6 +22,11 @@ describe Account do
 
     it 'adds the deposited amount to the balance' do
       expect { account.deposit(1000.00) }.to change { account.balance }.by(1000.00)
+    end
+
+    it 'adds the details of the deposited amount to the list of transactions' do
+      account.deposit(1000.00)
+      expect(account.transactions).to include({ time: Time.now, amount: 1000.00, type: 'credit' })
     end
   end
 

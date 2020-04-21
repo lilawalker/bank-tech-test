@@ -2,14 +2,16 @@ class Account
 
   INITIAL_BALANCE = 0
 
-  attr_reader :balance
+  attr_reader :balance, :transactions
 
   def initialize
     @balance = INITIAL_BALANCE
+    @transactions = Array.new
   end
 
   def deposit(amount)
     @balance += amount
+    @transactions << { time: Time.now, amount: amount, type: 'credit' }
   end
 
   def withdraw(amount)
