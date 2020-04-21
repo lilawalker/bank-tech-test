@@ -43,6 +43,12 @@ describe Account do
     it 'throws an error if there is not enough money in the account' do
       expect { account.withdraw(50) }.to raise_error 'Insufficient balance. Please try again.'
     end
+
+    it 'adds the details of the withdrawn amount to the list of transactions' do
+      account.deposit(1000.00)
+      account.withdraw(1000.00)
+      expect(account.transactions).to include({ time: Time.now, amount: 1000.00, type: 'debit' })
+    end
   end
 
 end

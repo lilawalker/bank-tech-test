@@ -18,6 +18,7 @@ class Account
     fail 'Insufficient balance. Please try again.' unless sufficient_funds?(amount)
 
     @balance -= amount
+    @transactions << { time: Time.now, amount: amount, type: 'debit' }
   end
 
   private
