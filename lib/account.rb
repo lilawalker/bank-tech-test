@@ -1,4 +1,5 @@
 require_relative 'transaction'
+require_relative 'statement'
 
 class Account
 
@@ -6,9 +7,10 @@ class Account
 
   attr_reader :balance, :transactions
 
-  def initialize
+  def initialize(statement = Statement.new)
     @balance = INITIAL_BALANCE
     @transactions = Array.new
+    @statement = statement
   end
 
   def deposit(amount)
@@ -24,26 +26,11 @@ class Account
   end
 
   def display_statement
-
-    @cummulative_balance = 0
-
-    formatted = @transactions.map do |transaction|
-      if transaction.type == 'credit'
-        "#{transaction.time.strftime('%d/%m/%Y')} || #{sprintf '%.2f', transaction.amount} || || #{sprintf '%.2f', @cummulative_balance += transaction.amount}"
-      else
-        "#{transaction.time.strftime('%d/%m/%Y')} || || #{sprintf '%.2f', transaction.amount} || #{sprintf '%.2f', @cummulative_balance -= transaction.amount}"
-      end
-    end
-
-    statement_header
-    puts formatted.reverse
+    puts @statement.header
+    puts @statement.format(transactions)
   end
 
   private
-
-  def statement_header
-    puts 'date || credit || debit || balance'
-  end
 
   def sufficient_funds?(amount)
     @balance >= amount
