@@ -13,11 +13,11 @@ describe Transaction do
     expect(transaction.amount).to eq 1000.00
   end
 
-   it 'is initialized with the given type' do
+  it 'is initialized with the given type' do
     expect(transaction.type).to eq 'credit'
   end
 
-   it 'is initialized with the current time' do
+  it 'is initialized with the current time' do
     expect(transaction.time).to eq Time.now
   end
 
