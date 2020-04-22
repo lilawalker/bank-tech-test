@@ -1,10 +1,22 @@
 require './lib/account'
 
+statement = <<-STATEMENT
+date || credit || debit || balance
+21/04/2020 || || 1000.00 || 0.00
+21/04/2020 || 1000.00 || || 1000.00
+STATEMENT
+
 describe Account do
 
+  before do
+    @time_now = Time.parse('21/04/2020')
+    allow(Time).to receive(:now).and_return(@time_now)
+  end
+
   subject(:account) { described_class.new }
-  let(:credit_transaction) { double :credit_transaction }
-  let(:debit_transaction) { double :debit_transaction }
+
+  let(:credit_transaction) { double('Transaction', amount: 1000.00, type: 'credit', time: Time.now) }
+  let(:debit_transaction) { double('Transaction', amount: 1000.00, type: 'debit', time: Time.now) }
 
   describe '.balance' do
     it 'has an initial balance of 0' do
@@ -48,6 +60,16 @@ describe Account do
       allow(Transaction).to receive(:new).with(1000.00, 'debit').and_return(debit_transaction)
       account.withdraw(1000.00)
       expect(account.transactions).to include(debit_transaction)
+    end
+  end
+
+  describe '#print_statement' do
+    it 'displays the formatted statement' do
+      allow(Transaction).to receive(:new).with(1000.00, 'credit').and_return(credit_transaction)
+      account.deposit(1000.00)
+      allow(Transaction).to receive(:new).with(1000.00, 'debit').and_return(debit_transaction)
+      account.withdraw(1000.00)
+      expect { account.display_statement }.to output(statement).to_stdout
     end
   end
 

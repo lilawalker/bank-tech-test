@@ -23,7 +23,27 @@ class Account
     @balance -= amount
   end
 
+  def display_statement
+
+    @cummulative_balance = 0
+
+    formatted = @transactions.map do |transaction|
+      if transaction.type == 'credit'
+        "#{transaction.time.strftime('%d/%m/%Y')} || #{sprintf '%.2f', transaction.amount} || || #{sprintf '%.2f', @cummulative_balance += transaction.amount}"
+      else
+        "#{transaction.time.strftime('%d/%m/%Y')} || || #{sprintf '%.2f', transaction.amount} || #{sprintf '%.2f', @cummulative_balance -= transaction.amount}"
+      end
+    end
+
+    statement_header
+    puts formatted.reverse
+  end
+
   private
+
+  def statement_header
+    puts 'date || credit || debit || balance'
+  end
 
   def sufficient_funds?(amount)
     @balance >= amount

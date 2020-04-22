@@ -1,6 +1,20 @@
+require './lib/account'
+
+statement = <<-STATEMENT
+date || credit || debit || balance
+21/04/2020 || || 500.00 || 2500.00
+21/04/2020 || 2000.00 || || 3000.00
+21/04/2020 || 1000.00 || || 1000.00
+STATEMENT
+
 describe 'User Stories' do
 
   let(:account) { Account.new }
+
+  before do
+    @time_now = Time.parse('21/04/2020')
+    allow(Time).to receive(:now).and_return(@time_now)
+  end
 
   describe 'balance' do
     # As a user
@@ -44,6 +58,19 @@ describe 'User Stories' do
         account.withdraw(50)
         expect { account.withdraw(50) }.to raise_error 'Insufficient balance. Please try again.'
       end
+    end
+  end
+
+  describe 'print' do
+    it 'can print the account statement' do
+      # As a user
+      # So that I can see a list of all my account transactions
+      # I would like to print my statement of account
+
+      account.deposit(1000.00)
+      account.deposit(2000.00)
+      account.withdraw(500)
+      expect { account.display_statement }.to output(statement).to_stdout
     end
   end
 
