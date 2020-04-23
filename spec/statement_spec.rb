@@ -8,8 +8,8 @@ describe Statement do
   end
 
   subject(:statement) { described_class.new }
-  let(:credit_transaction) { double('Transaction', amount: 1000.00, type: 'credit', time: Time.now) }
-  let(:debit_transaction) { double('Transaction', amount: 1000.00, type: 'debit', time: Time.now) }
+  let(:credit_transaction) { double('Transaction', amount: 1000.00, type: 'credit', time: Time.now, balance: 1000.00) }
+  let(:debit_transaction) { double('Transaction', amount: 1000.00, type: 'debit', time: Time.now, balance: 0.00) }
   let(:transactions) { [credit_transaction, debit_transaction] }
 
   describe '#format' do

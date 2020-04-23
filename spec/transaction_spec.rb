@@ -7,7 +7,7 @@ describe Transaction do
     allow(Time).to receive(:now).and_return(@time_now)
   end
 
-  subject(:transaction) { described_class.new(1000.00, 'credit') }
+  subject(:transaction) { described_class.new(1000.00, 'credit', 1000.00) }
 
   it 'is initialized with the given amount' do
     expect(transaction.amount).to eq 1000.00
@@ -19,6 +19,10 @@ describe Transaction do
 
   it 'is initialized with the current time' do
     expect(transaction.time).to eq Time.now
+  end
+
+  it 'is initialized with the current balance' do
+    expect(transaction.balance).to eq 1000.00
   end
 
 end

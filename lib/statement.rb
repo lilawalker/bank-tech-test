@@ -1,17 +1,17 @@
 class Statement
 
   def format(transactions)
-    balance = 0
+    transactions.reverse.map do |transaction|
+      date = date(transaction.time)
+      amount = decimal(transaction.amount)
+      balance = decimal(transaction.balance)
 
-    output = transactions.map do |transaction|
       if transaction.type == 'credit'
-        "#{date(transaction)} || #{amount(transaction)} || || #{'%.2f' % balance += transaction.amount}"
+        "#{date} || #{amount} || || #{balance}"
       else
-        "#{date(transaction)} || || #{amount(transaction)} || #{'%.2f' % balance -= transaction.amount}"
+        "#{date} || || #{amount} || #{balance}"
       end
     end
-
-    output.reverse
   end
 
   def header
@@ -20,12 +20,12 @@ class Statement
 
   private
 
-  def date(transaction)
-    transaction.time.strftime('%d/%m/%Y')
+  def decimal(value)
+    '%.2f' % value
   end
 
-  def amount(transaction)
-    '%.2f' % transaction.amount
+  def date(time)
+    time.strftime('%d/%m/%Y')
   end
 
 end

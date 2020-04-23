@@ -9,20 +9,22 @@ class Account
 
   def initialize(statement = Statement.new)
     @balance = INITIAL_BALANCE
-    @transactions = Array.new
+    @transactions = []
     @statement = statement
   end
 
   def deposit(amount)
-    @transactions << Transaction.new(amount, 'credit')
     @balance += amount
+    @transactions << Transaction.new(amount, 'credit', @balance)
+    "#{amount} deposited to account"
   end
 
   def withdraw(amount)
     fail 'Insufficient balance. Please try again.' unless sufficient_funds?(amount)
 
-    @transactions << Transaction.new(amount, 'debit')
     @balance -= amount
+    @transactions << Transaction.new(amount, 'debit', @balance)
+    "#{amount} withdrawn from account"
   end
 
   def display_statement

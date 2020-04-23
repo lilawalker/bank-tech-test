@@ -15,8 +15,8 @@ describe Account do
 
   subject(:account) { described_class.new }
 
-  let(:credit_transaction) { double('Transaction', amount: 1000.00, type: 'credit', time: Time.now) }
-  let(:debit_transaction) { double('Transaction', amount: 1000.00, type: 'debit', time: Time.now) }
+  let(:credit_transaction) { double('Transaction', amount: 1000.00, type: 'credit', time: Time.now, balance: 1000.00) }
+  let(:debit_transaction) { double('Transaction', amount: 1000.00, type: 'debit', time: Time.now, balance: 0.00) }
 
   describe '.balance' do
     it 'has an initial balance of 0' do
@@ -34,7 +34,7 @@ describe Account do
     end
 
     it 'adds the details of the deposited amount to the list of transactions' do
-      allow(Transaction).to receive(:new).with(1000.00, 'credit').and_return(credit_transaction)
+      allow(Transaction).to receive(:new).with(1000.00, 'credit', 1000.00).and_return(credit_transaction)
       account.deposit(1000.00)
       expect(account.transactions).to include(credit_transaction)
     end
@@ -55,9 +55,9 @@ describe Account do
     end
 
     it 'adds the details of the withdrawn amount to the list of transactions' do
-      allow(Transaction).to receive(:new).with(1000.00, 'credit').and_return(credit_transaction)
+      allow(Transaction).to receive(:new).with(1000.00, 'credit', 1000.00).and_return(credit_transaction)
       account.deposit(1000.00)
-      allow(Transaction).to receive(:new).with(1000.00, 'debit').and_return(debit_transaction)
+      allow(Transaction).to receive(:new).with(1000.00, 'debit', 0.00).and_return(debit_transaction)
       account.withdraw(1000.00)
       expect(account.transactions).to include(debit_transaction)
     end
@@ -65,9 +65,9 @@ describe Account do
 
   describe '#print_statement' do
     it 'displays the formatted statement' do
-      allow(Transaction).to receive(:new).with(1000.00, 'credit').and_return(credit_transaction)
+      allow(Transaction).to receive(:new).with(1000.00, 'credit', 1000.00).and_return(credit_transaction)
       account.deposit(1000.00)
-      allow(Transaction).to receive(:new).with(1000.00, 'debit').and_return(debit_transaction)
+      allow(Transaction).to receive(:new).with(1000.00, 'debit', 0.00).and_return(debit_transaction)
       account.withdraw(1000.00)
       expect { account.display_statement }.to output(statement).to_stdout
     end
