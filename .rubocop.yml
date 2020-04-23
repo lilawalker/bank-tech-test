@@ -171,6 +171,8 @@ Style/TrivialAccessors:
   Enabled: true
 
 # Rubocop doesn't make disabling all cops in a given group easy, so we list...
+Style/FormatStringToken:
+  Enabled: false
 Layout/AccessModifierIndentation:
   Enabled: false
 Style/Alias:
