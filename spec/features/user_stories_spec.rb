@@ -22,7 +22,7 @@ describe 'User Stories' do
     # I would like to see the balance on my account
 
     it 'displays the balance' do
-      expect { account.balance }.not_to raise_error
+      expect(account.balance).to eq 0
     end
   end
 
@@ -32,7 +32,8 @@ describe 'User Stories' do
     # I would like to deposit money into my account
 
     it 'can deposit money into the account' do
-      expect { account.deposit(1000.00) }.not_to raise_error
+      expect(account.deposit(1000)).to eq '1000 deposited to account'
+      expect(account.balance).to eq 1000
     end
   end
 
@@ -44,7 +45,8 @@ describe 'User Stories' do
         # I would like to withdraw money from my account
 
         account.deposit(50)
-        expect { account.withdraw(50) }.not_to raise_error
+        expect(account.withdraw(50)).to eq '50 withdrawn from account'
+        expect(account.balance).to eq 0
       end
     end
 
