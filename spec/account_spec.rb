@@ -8,15 +8,10 @@ STATEMENT
 
 describe Account do
 
-  before do
-    @time_now = Time.parse('21/04/2020')
-    allow(Time).to receive(:now).and_return(@time_now)
-  end
-
-  subject(:account) { described_class.new }
-
-  let(:credit_transaction) { double('Transaction', amount: 1000.00, type: 'credit', time: Time.now, balance: 1000.00) }
-  let(:debit_transaction) { double('Transaction', amount: 1000.00, type: 'debit', time: Time.now, balance: 0.00) }
+  let(:transaction_double) { double :transaction }
+  let(:transaction_class_double) { double :transaction_class, new: transaction_double }
+  let(:statement_double) { double :statement }
+  subject(:account) { described_class.new(transaction_class: transaction_class_double, statement: statement_double) }
 
   describe '.balance' do
     it 'has an initial balance of 0' do
@@ -24,29 +19,30 @@ describe Account do
     end
   end
 
-  describe '#deposit' do
-    it 'responds to the method' do
-      expect(account).to respond_to(:deposit).with(1).argument
+  describe '.transactions' do
+    it 'is initialized with an empty array' do
+      expect(account.transactions).to eq Array.new
+      expect(account.transactions.length).to eq 0
     end
 
+    it 'adds a transaction to the list of transations' do
+      expect { account.deposit(1000) }.to change { account.transactions.length }.by(1)
+    end
+  end
+
+  describe '#deposit' do
     it 'adds the deposited amount to the balance' do
       expect { account.deposit(1000.00) }.to change { account.balance }.by(1000.00)
     end
 
-    it 'adds the details of the deposited amount to the list of transactions' do
-      allow(Transaction).to receive(:new).with(1000.00, 'credit', 1000.00).and_return(credit_transaction)
-      account.deposit(1000.00)
-      expect(account.transactions).to include(credit_transaction)
+    it 'creates a new credit transaction' do
+      expect(account.deposit(1000)).to eq "1000 deposited to account"
     end
   end
 
   describe '#withdraw' do
-    it 'responds to the method' do
-      expect(account).to respond_to(:withdraw).with(1).argument
-    end
-
     it 'subtracts the amount from the balance' do
-      account.deposit(1000.00)
+      account.deposit(1000)
       expect { account.withdraw(1000.00) }.to change { account.balance }.by(-1000.00)
     end
 
@@ -54,21 +50,21 @@ describe Account do
       expect { account.withdraw(50) }.to raise_error 'Insufficient balance. Please try again.'
     end
 
-    it 'adds the details of the withdrawn amount to the list of transactions' do
-      allow(Transaction).to receive(:new).with(1000.00, 'credit', 1000.00).and_return(credit_transaction)
-      account.deposit(1000.00)
-      allow(Transaction).to receive(:new).with(1000.00, 'debit', 0.00).and_return(debit_transaction)
-      account.withdraw(1000.00)
-      expect(account.transactions).to include(debit_transaction)
+    it 'creates a new debit transaction' do
+      account.deposit(1000)
+      expect(account.withdraw(1000)).to eq "1000 withdrawn from account"
     end
   end
 
   describe '#print_statement' do
     it 'displays the formatted statement' do
-      allow(Transaction).to receive(:new).with(1000.00, 'credit', 1000.00).and_return(credit_transaction)
       account.deposit(1000.00)
-      allow(Transaction).to receive(:new).with(1000.00, 'debit', 0.00).and_return(debit_transaction)
       account.withdraw(1000.00)
+      allow(statement_double).to receive(:header).and_return("date || credit || debit || balance")
+      allow(statement_double).to receive(:format).with([transaction_double, transaction_double]).and_return([
+        "21/04/2020 || || 1000.00 || 0.00",
+        "21/04/2020 || 1000.00 || || 1000.00"
+      ])
       expect { account.display_statement }.to output(statement).to_stdout
     end
   end

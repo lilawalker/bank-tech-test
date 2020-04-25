@@ -7,15 +7,16 @@ class Account
 
   attr_reader :balance, :transactions
 
-  def initialize(statement = Statement.new)
+  def initialize(statement: Statement.new, transaction_class: Transaction)
     @balance = INITIAL_BALANCE
+    @transaction_class = transaction_class
     @transactions = []
     @statement = statement
   end
 
   def deposit(amount)
     @balance += amount
-    @transactions << Transaction.new(amount, 'credit', @balance)
+    @transactions << @transaction_class.new(amount, 'credit', @balance)
     "#{amount} deposited to account"
   end
 
@@ -23,7 +24,7 @@ class Account
     fail 'Insufficient balance. Please try again.' unless sufficient_funds?(amount)
 
     @balance -= amount
-    @transactions << Transaction.new(amount, 'debit', @balance)
+    @transactions << @transaction_class.new(amount, 'debit', @balance)
     "#{amount} withdrawn from account"
   end
 
